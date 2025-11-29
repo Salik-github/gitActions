@@ -1,10 +1,12 @@
-name : Salik Actions
-on: push
+name: Salik Actions
 
-jobs: 
-  salik: 
-    runs-on: ubundu-latest
+on: 
+  push:
 
-    steps: 
-    - name : print my folder
-      run : echo " this is our actions folder successfully lanuch " 
+jobs:
+  salik:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print my folder
+        run: echo "This is our actions folder successfully launched"
