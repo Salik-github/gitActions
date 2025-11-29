@@ -1,0 +1,21 @@
+name: Send email notification
+on:
+  push: 
+jobs:
+  email-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Email
+        if: ${{ always() }}
+        uses: devellany/send-mailer@v1.0.2
+        with:
+            host: smtp.google.com
+            account: ${{secrets.MAIL_ADDRESS}}
+            password: ${{secrets.MAIL_PASSWORD}}
+            sender: devellany
+            from: ${{secrets.MAIL_ADDRESS}}
+            to: mohammedsalik2511@gmail.com
+            subject: mail title.
+            body: file://README.md
+            contentType: text/html
+            attachments: file://attachments.json
