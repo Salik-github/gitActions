@@ -1,0 +1,16 @@
+name: sched1ule workflow    
+on:
+  schedule:
+    - cron: '* * * * *' # Runs every day at midnight UTC   
+jobs:
+  scheduled-job:
+    runs-on: ubuntu-latest      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: run java file
+        run: |
+          javac Test.java
+          java Test
+      - name: Confirm execution
+        run: echo "Scheduled workflow executed successfully"
