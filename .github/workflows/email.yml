@@ -20,3 +20,4 @@ jobs:
           from: ${{ secrets.MAIL_ADDRESS }}
           content_type: text/html
           body: "<p>The <strong>deployment</strong> to production was successful 🎉</p>"
+          
