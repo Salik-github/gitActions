@@ -5,18 +5,15 @@ jobs:
   email-notification:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Email
-        if: ${{ always() }}
-        uses: devellany/send-mailer@v3
+      - name: Send Deployment Email
+        uses: wesdevteam/maileraction@v1
         with:
-                host: smtp.google.com
-                serverPort: 465
-                account: ${{secrets.MAIL_ADDRESS}}
-                password: ${{secrets.MAIL_PASSWORD}}
-                sender: devellany
-                from: ${{secrets.MAIL_ADDRESS}}
-                to: mohammedsalik2511@gmail.com
-                subject: mail title.
-                body: file://README.md
-                contentType: text/html
-                attachments: file://attachments.json
+          to: team@example.com
+          subject: "✅ Production Deployment Complete"
+          text: "The deployment was completed successfully."
+          html: "<p>The <strong>deployment</strong> to production was successful 🎉</p>"
+        env:
+          MAIL: ${{ secrets.MAIL_ADDRESS }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_HOST: smtp.gmail.com
+          MAIL_PORT: 465
