@@ -1,0 +1,10 @@
+name : Salik Actions
+on: push
+
+jobs: 
+  salik: 
+    runs-on: ubundu-latest
+
+    steps: 
+    - name : print my folder
+      run : echo " this is our actions folder successfully lanuch " 
