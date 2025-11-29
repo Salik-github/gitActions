@@ -2,7 +2,7 @@ name: schedule workflow
 
 on:
   schedule:
-    - cron: "* * * * *"     # runs every minute
+    - cron: "* * * * *"     
 
 jobs:
   scheduled-job:
