@@ -1,0 +1,14 @@
+name: print data from the java folder
+on: 
+  push:
+
+jobs:
+  java-p:
+    runs-on: ubuntu-latest      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: run a java file
+        run: |
+          javac Test.java
+          java Test
