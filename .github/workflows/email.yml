@@ -18,6 +18,6 @@ jobs:
           subject: "✅ Production Deployment Complete"
           to: mohammedsalik2511@gmail.com
           from: ${{ secrets.MAIL_ADDRESS }}
-          content_type: text/html
-          body: "<p>The <strong>deployment</strong> to production was successful 🎉</p>"
+          html_body: "<p>Deployment successful 🎉</p>"
+
 
