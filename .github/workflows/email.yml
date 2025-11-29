@@ -16,8 +16,8 @@ jobs:
           username: ${{ secrets.MAIL_ADDRESS }}
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: "✅ Production Deployment Complete"
-          to: team@example.com
+          to: mohammedsalik2511@gmail.com
           from: ${{ secrets.MAIL_ADDRESS }}
           content_type: text/html
           body: "<p>The <strong>deployment</strong> to production was successful 🎉</p>"
-          
+
