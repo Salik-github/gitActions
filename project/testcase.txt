@@ -1,0 +1,16 @@
+# Testcase 1: Valid Login
+
+1. Goto this url https://ndgsp.gaipp.com/signin
+2. Enter UserEmail id : white@gmail.in
+3. Enter password : 123456
+4. Click Login Button
+5. Verify redirect to this url https://ndgsp.gaipp.com/crm/dashboard/summary
+
+
+# Testcase 2: Invalid Login
+
+1. Goto this url https://ndgsp.gaipp.com/signin
+2. Enter UserEmail id : testsete@gmail.com
+3. Enter password : 123456
+4. Click Login Button
+5. Verify this toast message is visible: "You are not registered, please register now"
