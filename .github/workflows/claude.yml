@@ -1,49 +1,63 @@
-name: E2E Tests with Nay Agent
+name: Playwright E2E with Gemini CLI Agent
 
 on:
-  workflow_dispatch:                 # Manual run from UI
-  push:                            # Trigger on push
+  workflow_dispatch:  # Manual trigger
+  push:
 
 jobs:
-  use-playwright:
+  e2e-tests:
   
+
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
+   
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Gemini Agent (free AI agent CLI)
-        run: curl -fsSL https://gemini.dev/install.sh | bash
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Install Playwright + Node
+      - name: Install Gemini CLI (official, free AI agent)
+        run: |
+          npm install -g @google/gemini-cli
+          gemini --version  # Verify install
+
+      - name: Install Playwright deps
         run: |
           npm init -y
           npm install playwright @playwright/test
           npx playwright install --with-deps
 
-      - name: Create required files/folders
-        run: |
-          mkdir -p screenshots playwright-report
+      - name: Setup folders
+        run: mkdir -p screenshots playwright-report
 
-      - name: Run Gemini Agent with prompt.md + 'run'
+      - name: Authenticate Gemini (using free API key secret)
         run: |
-          # Load system prompt from file, execute 'run' non-interactively
-          gemini --model gemini-2.0-pro-exp \
-                 --system "$(cat prompt.md)" \
-                 --non-interactive \
-                 "run"
+          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> $GITHUB_ENV
+          # Test auth (optional, for logging)
+          gemini --model gemini-2.0-pro "Hello" --non-interactive
 
-      - name: Upload HTML report + screenshots + CSV
+      - name: "Run Gemini Agent: Load prompt.md + execute 'run'"
+        run: |
+          # Pipe prompt.md as system prompt, run "run" non-interactively
+          # (Gemini CLI will: launch browser, execute testcase.txt steps, screenshot fails, gen reports)
+          cat prompt.md | gemini \
+            --model gemini-2.0-pro \
+            --system-prompt-from-stdin \
+            --non-interactive \
+            "run"
+
+      - name: Upload reports & screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-report-and-screenshots
+          name: e2e-playwright-reports
           path: |
             playwright-report/
             screenshots/
             *.csv
             test-results.*
+          retention-days: 30
