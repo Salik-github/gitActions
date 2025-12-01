@@ -1,57 +1,49 @@
-name: 📝 Playwright Agent E2E Workflow
+name: E2E Tests with Nay Agent
 
 on:
-  workflow_dispatch:
-  push:
-      paths:
-      - 'project/prompt.md'
-      # Add other files the agent might modify/use here
+  workflow_dispatch:                 # Manual run from UI
+  push:                            # Trigger on push
 
 jobs:
-  e2e_agent_test:
+  use-playwright:
+  
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
-      - name: 1. Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: 2. Setup Node.js & Install Gemini CLI
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          run: npm install -g @google/gemini-cli
+      - name: Install Nay (free AI agent CLI)
+        run: curl -fsSL https://nay.dev/install.sh | bash
 
-      # 3. Setup Playwright (Crucial step the agent relies on!)
-      - name: 3. Install Playwright Dependencies
-        # The agent is instructed to run Playwright, so we must install it and its browsers.
+      - name: Install Playwright + Node
         run: |
-          npm install playwright
+          nay --version
+          npm init -y
+          npm install playwright @playwright/test
           npx playwright install --with-deps
 
-      - name: 4. Execute E2E Testing Agent (Combined Prompt)
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      - name: Create required files/folders
         run: |
-          # Concatenate the instruction prompt with the execution command 'run'.
-          AGENT_PROMPT="As an E2E Testing Agent, analyze the instructions in the attached Markdown file. Now, execute the command 'run' immediately to proceed with the Playwright test generation and execution as described in the file. @project/prompt.md\n\nrun"
-          
-          # We explicitly allow the agent to use the Shell and File tools for generating/running tests
-          gemini \
-            "${AGENT_PROMPT}" \
-            --model gemini-2.5-flash \
-            --output-format text \
-            --allowed-tools "Shell,WriteFile,ReadFile" > AGENT_OUTPUT.md
-          
-          echo "--- Agent Action Log ---"
-          cat AGENT_OUTPUT.md
-          
-      # ----------------------------------------------------
-      # THE NEW STEP TO HANDLE THE REPORT
-      # ----------------------------------------------------
-      - name: 5. Upload Playwright HTML Report
+          mkdir -p screenshots playwright-report
+
+      - name: Run Nay Agent with your prompt.md
+        run: |
+          nay --model gemini/gemini-2.0-pro-exp \
+              --system @prompt.md \
+              --non-interactive \
+              --input "run"
+
+      - name: Upload HTML report + screenshots + CSV
+        if: always()
         uses: actions/upload-artifact@v4
-        # 'if: always()' ensures the report is uploaded even if the tests failed (Step 4 exited with an error)
-        if: ${{ always() }}
         with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 5 # How long to keep the report on GitHub
+          name: e2e-report-and-screenshots
+          path: |
+            playwright-report/
+            screenshots/
+            *.csv
+            test-results.*
