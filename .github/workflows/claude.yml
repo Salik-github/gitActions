@@ -19,21 +19,28 @@ jobs:
       - name: 3. Install Open-Source Gemini CLI
         run: npm install -g @google/gemini-cli
 
-      - name: 4. Process MD File with Free Gemini CLI
+      - name: 4. Execute E2E Testing Agent with MD Context (FIXED)
         env:
-          # Your free-tier API key is securely used here
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-         echo "Processing file project/prompt.md and outputting to CORRECTED_PROMPT.md..."
+          echo "Starting E2E Testing Agent using project/prompt.md for instructions..."
           
-          # The entire content of your MD file is read and piped as context 
-          # The output is now redirected to a file in the existing root directory
-          cat project/prompt.md | gemini generate \
+          # ----------------------------------------------------------------------------------
+          # NOTE: To use a Playwright MCP server, you must set up the config:
+          # This requires creating a .gemini/settings.json file in the repo root 
+          # with the Playwright MCP server configured, OR running a service in Docker.
+          # For a basic test generation without external servers, this is a good start.
+          # ----------------------------------------------------------------------------------
+
+          # The @ symbol includes the full content of the file (project/prompt.md)
+          # The agent's instructions (your rules and steps) are now inside that file.
+          
+          gemini \
+            "As an E2E Testing Agent, analyze the instructions in the attached Markdown file. When the context indicates the step 'run', execute the Playwright test generation and execution steps exactly as described in the file. @project/prompt.md" \
             --model gemini-2.5-flash \
-            --prompt "As a Testing E2E Agent expert, read the following Markdown file work on the based on the content "run"." \
-            --output text > CORRECTED_PROMPT.md
+            --output-format text > AGENT_OUTPUT.md
           
-          echo "--- Content saved to CORRECTED_PROMPT.md ---"
-          cat CORRECTED_PROMPT.md
+          echo "--- Agent Response and Action Log ---"
+          cat AGENT_OUTPUT.md
 
      
