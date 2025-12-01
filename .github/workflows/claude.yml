@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - project/prompt.md
-    
+  workflow_dispatch:  
+   
 jobs:
   process_markdown:
     runs-on: ubuntu-latest
