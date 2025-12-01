@@ -30,12 +30,13 @@ jobs:
         run: |
           mkdir -p screenshots playwright-report
 
-      - name: Run Nay Agent with your prompt.md
+      - name: Run Gemini Agent with prompt.md + 'run'
         run: |
-          nay --model gemini/gemini-2.0-pro-exp \
-              --system @prompt.md \
-              --non-interactive \
-              --input "run"
+          # Load system prompt from file, execute 'run' non-interactively
+          gemini --model gemini-2.0-pro-exp \
+                 --system "$(cat prompt.md)" \
+                 --non-interactive \
+                 "run"
 
       - name: Upload HTML report + screenshots + CSV
         if: always()
