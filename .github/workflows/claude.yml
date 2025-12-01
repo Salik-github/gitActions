@@ -2,9 +2,7 @@ name: 📝 Playwright Agent E2E Workflow
 
 on:
   push:
-    branches:
-      - main
-    paths:
+      paths:
       - 'project/prompt.md'
       # Add other files the agent might modify/use here
 
