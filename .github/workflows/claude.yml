@@ -13,9 +13,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install claude CLI
-        run: |
-            curl -fsSL https://install.anthropic.com | sh
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Claude CLI
+        run: npm install -g @anthropic-ai/claude-cli
 
       - name: set Anthropic API Key
         env:
@@ -28,6 +32,7 @@ jobs:
 
       - name: Ask Claude
         run: claude api "Write a short message for GitHub Actions"
+
       - uses: actions/upload-artifact@v4
         with:
             name: claude-output
