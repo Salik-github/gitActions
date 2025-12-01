@@ -16,12 +16,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Nay (free AI agent CLI)
-        run: curl -fsSL https://nay.dev/install.sh | bash
+      - name: Install Gemini Agent (free AI agent CLI)
+        run: curl -fsSL https://gemini.dev/install.sh | bash
 
       - name: Install Playwright + Node
         run: |
-          nay --version
           npm init -y
           npm install playwright @playwright/test
           npx playwright install --with-deps
