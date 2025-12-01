@@ -11,13 +11,8 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
       - name: Install Claude CLI
-        run: npm install -g @anthropic-ai/claude-cli
+        run: curl -fsSL https://claude.ai/install.sh | bash
 
       - name: Add Anthropic API Key
         run: echo "ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}" >> $GITHUB_ENV
@@ -28,4 +23,4 @@ jobs:
           claude --version
 
       - name: Run Claude
-        run: claude "Hello from GitHub Actions"
+        run: claude "Hello from GitHub Actions"   
