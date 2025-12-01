@@ -184,29 +184,6 @@
               - generic [ref=e206]: or 9 x
               - generic [ref=e207]: $5.44
           - button "Add to cart" [ref=e208] [cursor=pointer]
-  - generic [ref=e209]:
-    - button "X" [ref=e210] [cursor=pointer]
-    - generic [ref=e211]:
-      - generic [ref=e212]:
-        - generic [ref=e214]: "1"
-        - text: Cart
-      - generic [ref=e216]:
-        - button "remove product from cart" [ref=e217] [cursor=pointer]
-        - img "Cropped Stay Groovy off white" [ref=e218]
-        - generic [ref=e219]:
-          - paragraph [ref=e220]: Cropped Stay Groovy off white
-          - paragraph [ref=e221]:
-            - text: X | White T-shirt
-            - text: "Quantity: 1"
-        - generic [ref=e222]:
-          - paragraph [ref=e223]: $ 10.90
-          - generic [ref=e224]:
-            - button "-" [disabled] [ref=e225]
-            - button "+" [ref=e226] [cursor=pointer]
-      - generic [ref=e227]:
-        - paragraph [ref=e228]: SUBTOTAL
-        - generic [ref=e229]:
-          - paragraph [ref=e230]: $ 10.90
-          - paragraph [ref=e231]: OR UP TO 9 x $ 1.21
-        - button "Checkout" [active] [ref=e232] [cursor=pointer]
+  - button "0" [ref=e210] [cursor=pointer]:
+    - generic "Products in cart quantity" [ref=e212]: "0"
 ```

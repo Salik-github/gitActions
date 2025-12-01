@@ -1,18 +1,40 @@
-name: Run Rovo Dev CLI in GitHub Actions
+name: 📝 Free Gemini CLI File Processor
 
 on:
-  workflow_dispatch:
-
+  push:
+    branches:
+      - main
+    paths:
+      - project/prompt.md
+    
 jobs:
-  rovo-dev-run:
+  process_markdown:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout Repo
+      - name: 1. Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Atlassian CLI
-        run: curl -L https://product-dist.atlassian.io/products/acli/v1/acli_installer.sh | bash
+      - name: 2. Setup Node.js (Required for CLI)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Run Rovo Dev CLI
-        run: acli rovodev run "Explain this codebase for study purposes"   
+      - name: 3. Install Open-Source Gemini CLI
+        run: npm install -g @google/gemini-cli
+
+      - name: 4. Process MD File with Free Gemini CLI
+        env:
+          # Your free-tier API key is securely used here
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          # The entire content of your MD file is read and piped as context 
+          cat docs/README.md | gemini generate \
+            --model gemini-2.5-flash \
+            --prompt "As a documentation expert, review the following Markdown file. Correct any spelling or grammar errors, and ensure all headings are consistent. Output ONLY the corrected Markdown content." \
+            --output text > docs/README.md.corrected
+          
+          echo "--- Corrected File Content ---"
+          cat docs/README.md.corrected
+
+     
