@@ -1,6 +1,7 @@
 name: 📝 Playwright Agent E2E Workflow
 
 on:
+  workflow_dispatch:
   push:
       paths:
       - 'project/prompt.md'
