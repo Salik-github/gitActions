@@ -1,16 +1,103 @@
-# Testcase 1: Valid Login
+# Test Case 1: Add a Product to Cart
 
-1. Goto this url https://ndgsp.gaipp.com/signin
-2. Enter UserEmail id : white@gmail.in
-3. Enter password : 123456
-4. Click Login Button
-5. Verify redirect to this url https://ndgsp.gaipp.com/crm/dashboard/summary
+Steps:
 
+Open: https://react-shopping-cart-67954.firebaseapp.com
+Scroll to "Cropped Stay Groovy off white" product.
+Click Add to cart button.
+Check the cart icon on the right side.
 
-# Testcase 2: Invalid Login
+Expected Result:
+Cart sidebar opens and product appears with correct price & quantity = 1.
 
-1. Goto this url https://ndgsp.gaipp.com/signin
-2. Enter UserEmail id : testsete@gmail.com
-3. Enter password : 123456
-4. Click Login Button
-5. Verify this toast message is visible: "You are not registered, please register now"
+# Test Case 2: Increase Product Quantity
+
+Steps:
+Add any product to cart.
+In the cart, click the + button.
+
+Expected Result:
+Quantity increments by 1 and subtotal updates correctly.
+
+# Test Case 3: Decrease Product Quantity
+
+Steps:
+
+Add a product to cart.
+Increase quantity to 2.
+Click the – button.
+
+Expected Result:
+Quantity reduces by 1. If quantity becomes 0, product should be removed.
+
+# Test Case 4: Remove Product from Cart
+
+Steps:
+
+Add a product to the cart.
+Click the X (remove) icon.
+
+Expected Result:
+Product disappears from the cart and subtotal updates.
+
+# Test Case 5: Verify Subtotal Calculation
+
+Steps:
+
+Add two products with known prices — e.g.,
+Cropped Stay Groovy off white → $10.90
+Basic Cactus White T-shirt → $13.25
+Verify subtotal at bottom.
+
+Expected Result:
+Subtotal = 10.90 + 13.25 = $24.15
+
+# Test Case 6: Filter Products by Size
+
+Steps:
+
+Click size button M.
+Check displayed product list.
+
+Expected Result:
+Only products available in size M should be shown.
+
+# Test Case 7: Clear Size Filter
+
+Steps:
+
+Select any size filter (e.g., XL).
+Click the same size again to unselect.
+
+Expected Result:
+All products (16 total) display again.
+
+# Test Case 8: Verify Product Image Loads
+
+Steps:
+
+Open the site.
+Scroll through various products.
+
+Expected Result:
+Each product image loads without distortion or broken links.
+
+# Test Case 9: Verify Free Shipping Label
+
+Steps:
+
+Check all products.
+Identify products showing “Free Shipping” label.
+
+Expected Result:
+Label should appear only on products that offer free shipping.
+
+# Test Case 10: Verify Responsive Cart Sidebar
+
+Steps:
+
+Add a product to the cart.
+Resize browser width or open on mobile view.
+
+Expected Result:
+Cart slides in correctly and remains functional on all screen sizes.

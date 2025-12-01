@@ -1,4 +1,4 @@
-name: Run playwright tests
+name: Run playwright testss
 on:
   push:
     branches:
