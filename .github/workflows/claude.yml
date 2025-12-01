@@ -1,46 +1,58 @@
-name: 📝 Free Gemini CLI File Processor
+name: 📝 Playwright Agent E2E Workflow
 
 on:
-  workflow_dispatch: 
   push:
+    branches:
+      - main
+    paths:
+      - 'project/prompt.md'
+      # Add other files the agent might modify/use here
+
 jobs:
-  process_markdown:
+  e2e_agent_test:
     runs-on: ubuntu-latest
-    
     steps:
       - name: 1. Checkout Code
         uses: actions/checkout@v4
 
-      - name: 2. Setup Node.js (Required for CLI)
+      - name: 2. Setup Node.js & Install Gemini CLI
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          run: npm install -g @google/gemini-cli
 
-      - name: 3. Install Open-Source Gemini CLI
-        run: npm install -g @google/gemini-cli
+      # 3. Setup Playwright (Crucial step the agent relies on!)
+      - name: 3. Install Playwright Dependencies
+        # The agent is instructed to run Playwright, so we must install it and its browsers.
+        run: |
+          npm install playwright
+          npx playwright install --with-deps
 
-      - name: 4. Execute E2E Testing Agent with MD Context (FIXED)
+      - name: 4. Execute E2E Testing Agent (Combined Prompt)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          echo "Starting E2E Testing Agent using project/prompt.md for instructions..."
+          # Concatenate the instruction prompt with the execution command 'run'.
+          AGENT_PROMPT="As an E2E Testing Agent, analyze the instructions in the attached Markdown file. Now, execute the command 'run' immediately to proceed with the Playwright test generation and execution as described in the file. @project/prompt.md\n\nrun"
           
-          # ----------------------------------------------------------------------------------
-          # NOTE: To use a Playwright MCP server, you must set up the config:
-          # This requires creating a .gemini/settings.json file in the repo root 
-          # with the Playwright MCP server configured, OR running a service in Docker.
-          # For a basic test generation without external servers, this is a good start.
-          # ----------------------------------------------------------------------------------
-
-          # The @ symbol includes the full content of the file (project/prompt.md)
-          # The agent's instructions (your rules and steps) are now inside that file.
-          
+          # We explicitly allow the agent to use the Shell and File tools for generating/running tests
           gemini \
-            "As an E2E Testing Agent, analyze the instructions in the attached Markdown file. When the context indicates the step 'run', execute the Playwright test generation and execution steps exactly as described in the file. @project/prompt.md" \
+            "${AGENT_PROMPT}" \
             --model gemini-2.5-flash \
-            --output-format text > AGENT_OUTPUT.md
+            --output-format text \
+            --allowed-tools "Shell,WriteFile,ReadFile" > AGENT_OUTPUT.md
           
-          echo "--- Agent Response and Action Log ---"
+          echo "--- Agent Action Log ---"
           cat AGENT_OUTPUT.md
-
-     
+          
+      # ----------------------------------------------------
+      # THE NEW STEP TO HANDLE THE REPORT
+      # ----------------------------------------------------
+      - name: 5. Upload Playwright HTML Report
+        uses: actions/upload-artifact@v4
+        # 'if: always()' ensures the report is uploaded even if the tests failed (Step 4 exited with an error)
+        if: ${{ always() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 5 # How long to keep the report on GitHub
