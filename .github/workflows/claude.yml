@@ -1,25 +1,18 @@
-name: Run Claude CLI in GitHub Actions
+name: Run Rovo Dev CLI in GitHub Actions
 
 on:
   workflow_dispatch:
 
 jobs:
-  claude-run:
+  rovo-dev-run:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Install Claude CLI
-        run: curl -fsSL https://claude.ai/install.sh | bash
+      - name: Install Atlassian CLI
+        run: curl -L https://product-dist.atlassian.io/products/acli/v1/acli_installer.sh | bash
 
-      - name: Login to Claude (Subscription)
-        run: claude login
-      - name: Verify Claude CLI
-        run: |
-          which claude
-          claude --version
-
-      - name: Run Claude
-        run: claude "Hello from GitHub Actions"   
+      - name: Run Rovo Dev CLI
+        run: acli rovodev run "Explain this codebase for study purposes"   
