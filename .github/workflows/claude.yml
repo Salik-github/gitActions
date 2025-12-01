@@ -11,29 +11,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Install Node
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'  # or 18/22 depending on your needs
 
-      - name: Install Claude CLI
-        run: npm install -g @anthropic-ai/claude-cli
+      - name: Install BWC CLI (includes Claude CLI)
+        run: npm install -g bwc-cli
 
-      - name: set Anthropic API Key
+      - name: Ask Claude a question and save response
         env:
-            ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-            echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY" >> $GITHUB_ENV
+          echo "Asking Claude to write a short message..."
+          claude "Write a short funny message to celebrate a successful GitHub Actions run" > claude-response.txt
+          cat claude-response.txt  # Optional: show in logs
 
-      - name: Verify Claude CLI
-        run: claude --version
-
-      - name: Ask Claude
-        run: claude api "Write a short message for GitHub Actions"
-
-      - uses: actions/upload-artifact@v4
+      - name: Upload Claude's response as artifact
+        uses: actions/upload-artifact@v4
         with:
-            name: claude-output
-            path: output.txt
+          name: claude-output
+          path: claude-response.txt
+          if-no-files-found: error
