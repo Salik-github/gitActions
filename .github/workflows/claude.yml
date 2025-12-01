@@ -1,11 +1,8 @@
 name: 📝 Free Gemini CLI File Processor
 
 on:
+  workflow_dispatch: 
   push:
-    branches:
-      - main
-  workflow_dispatch:  
-   
 jobs:
   process_markdown:
     runs-on: ubuntu-latest
@@ -27,13 +24,16 @@ jobs:
           # Your free-tier API key is securely used here
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
+         echo "Processing file project/prompt.md and outputting to CORRECTED_PROMPT.md..."
+          
           # The entire content of your MD file is read and piped as context 
+          # The output is now redirected to a file in the existing root directory
           cat project/prompt.md | gemini generate \
             --model gemini-2.5-flash \
-            --prompt "As a documentation expert, review the following Markdown file. Correct any spelling or grammar errors, and ensure all headings are consistent. Output ONLY the corrected Markdown content." \
-            --output text > docs/README.md.corrected
+            --prompt "As a Testing E2E Agent expert, read the following Markdown file work on the based on the content "run"." \
+            --output text > CORRECTED_PROMPT.md
           
-          echo "--- Corrected File Content ---"
-          cat docs/README.md.corrected
+          echo "--- Content saved to CORRECTED_PROMPT.md ---"
+          cat CORRECTED_PROMPT.md
 
      
