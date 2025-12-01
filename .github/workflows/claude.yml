@@ -28,7 +28,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           # The entire content of your MD file is read and piped as context 
-          cat docs/README.md | gemini generate \
+          cat project/prompt.md | gemini generate \
             --model gemini-2.5-flash \
             --prompt "As a documentation expert, review the following Markdown file. Correct any spelling or grammar errors, and ensure all headings are consistent. Output ONLY the corrected Markdown content." \
             --output text > docs/README.md.corrected
